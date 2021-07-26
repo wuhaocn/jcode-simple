@@ -1,0 +1,77 @@
+buildscript {
+  project.ext {
+
+    uploadRepo = { project ->
+      nexusRoot = 'https://s01.oss.sonatype.org/content/repositories'
+      return {
+        url "$nexusRoot/${project.version.endsWith('-SNAPSHOT') ? 'snapshots' : 'releases'}"
+        //credentials { username ossrhUsername; password ossrhPassword }
+      }
+    }
+    repoClosure = {
+      mavenLocal()
+      mavenCentral()
+      maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+
+
+
+    }
+    versionTail = new Date().format('yyMMddHHmm')
+  }
+  repositories repoClosure
+}
+
+
+allprojects { project ->
+
+  project.repositories rootProject.repoClosure
+
+  group = 'io.github.helium-cloud'
+  version = "5.0.0-$versionTail"
+}
+
+def mavenPublishIgnoreList = ['helium-sample']
+
+subprojects { project ->
+
+  apply plugin: 'java'
+
+  apply plugin: 'maven-publish'
+
+  tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+  }
+
+  tasks.withType(Test) {
+    defaultCharacterEncoding = "UTF-8"
+  }
+  dependencies {
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junit_version}"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:${junit_version}"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:${junit_version}"
+    testImplementation "org.mockito:mockito-core:${mockito_version}"
+    testImplementation "org.mockito:mockito-junit-jupiter:${mockito_version}"
+  }
+
+  task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+  }
+  test {
+    useJUnitPlatform()
+  }
+  if (!(project.name in mavenPublishIgnoreList)) {
+    publishing {
+      repositories {
+        maven uploadRepo(project)
+      }
+      publications {
+        maven(MavenPublication) {
+          from components.java
+          artifact sourceJar
+        }
+      }
+    }
+  }
+}
