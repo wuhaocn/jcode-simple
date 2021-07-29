@@ -11,7 +11,6 @@ buildscript {
 }
 apply plugin: "io.freefair.aspectj"
 apply plugin: 'io.freefair.aspectj.base'
-//apply plugin: "io.freefair.aspectj.post-compile-weaving"
 
 dependencies {
   compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.5'

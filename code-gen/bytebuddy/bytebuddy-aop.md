@@ -293,6 +293,9 @@ Jedis jedis = classDeclaredConstructor.newInstance("10.3.4.111", 6379);
 @FieldValue  |	注入被拦截对象的一个字段的值
 @Morph |	类似于@SuperCall，但是允许指定调用参数
 
+* 代码参考:
+  https://github.com/wuhaocn/jcode-simple/tree/master/code-gen/bytebuddy
+  
 ## 8.参考
 
 https://zhuanlan.zhihu.com/p/151843984
