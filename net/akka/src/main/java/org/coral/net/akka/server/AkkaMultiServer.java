@@ -14,18 +14,21 @@ public class AkkaMultiServer {
 
 
 	public void startServers(List<String> list, Class classT) throws Exception {
+		int i = 0;
 		for (String serverAddr : list) {
-			startServer(serverAddr, classT);
+			startServer(serverAddr, classT, i);
+			i++;
 		}
 	}
 
-	public void startServer(String serverAddr, Class classT) throws Exception {
+	public void startServer(String serverAddr, Class classT, int i) throws Exception {
 
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 
 				try {
+					Thread.sleep(i * 3000);
 					AkkaClusterConfig clusterConfig = AkkaClusterConfig.buildAkkaClusterConfig(AccessServerList.getIp(serverAddr),
 							AccessServerList.getPort(serverAddr));
 					AkkaCloudCluster akkaCloudCluster = new AkkaCloudCluster();

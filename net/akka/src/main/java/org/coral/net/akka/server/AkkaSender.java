@@ -34,7 +34,8 @@ public class AkkaSender {
 	}
 
 	protected ActorSelection select(AkkaNode node) {
-		return this.actorSystem.actorSelection(node.getAkkaAddr());
+		String remoteAddress = "akka.tcp://cluster@" + node.getAkkaAddr() + "/user/AppNodeActor";
+		return this.actorSystem.actorSelection(remoteAddress);
 	}
 
 	protected ActorSelection select(String method) {
@@ -136,9 +137,9 @@ public class AkkaSender {
 		@Override
 		protected CompletableFuture<Object> send(ActorSelection actor, Serializable msg) {
 			final CompletableFuture<Object> c = new CompletableFuture<>();
-			ActorSelection actorSelection = select(this.method);
+			//ActorSelection actorSelection = select(this.method);
 
-			Future<Object> f = Patterns.ask(actorSelection, msg, 5000);
+			Future<Object> f = Patterns.ask(actor, msg, 5000);
 			System.out.println("uuid: " + msg + " start");
 			Object result = null;
 			try {
