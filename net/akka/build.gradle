@@ -1,0 +1,18 @@
+dependencies {
+  //log4j
+
+  compile "org.slf4j:slf4j-api:${slf4j_version}"
+  compile "com.typesafe.akka:akka-actor_2.11:${akka_version}"
+  compile "com.typesafe.akka:akka-remote_2.11:${akka_version}"
+  compile "com.google.guava:guava:${guava_version}"
+  compile "com.github.ben-manes.caffeine:caffeine:${caffeine_version}"
+  compile "io.protostuff:protostuff-api:${protostuff_version}"
+  compile "io.protostuff:protostuff-collectionschema:${protostuff_version}"
+  compile "io.protostuff:protostuff-core:${protostuff_version}"
+  compile "io.protostuff:protostuff-json:${protostuff_version}"
+  compile "io.protostuff:protostuff-runtime:${protostuff_version}"
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
+  testCompile group: 'org.slf4j', name: 'slf4j-simple', version: slf4j_version
+}
+
