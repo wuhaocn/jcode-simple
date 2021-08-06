@@ -11,20 +11,22 @@ import java.util.List;
 public class AccessServerList {
 	public static List<String> getAppNodeList() {
 		List asList = Arrays.asList(
-				"127.0.0.1:5001",
-				"127.0.0.1:5002",
-				"127.0.0.1:5003");
+//				"127.0.0.1:5001",
+//				"127.0.0.1:5002",
+				"127.0.0.1:5003"
+		);
 		return asList;
 	}
 
 	public static List<String> getServerList() {
 		List asList = Arrays.asList(
-				"127.0.0.1:2001",
+//				"127.0.0.1:2001",
 //				"127.0.0.1:2002",
 //				"127.0.0.1:2003",
 //				"127.0.0.1:2004",
 //				"127.0.0.1:2005",
-				"127.0.0.1:2006");
+				"127.0.0.1:2006"
+		);
 		return asList;
 	}
 

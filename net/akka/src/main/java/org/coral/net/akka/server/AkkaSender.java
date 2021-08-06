@@ -5,11 +5,14 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSelection;
 import akka.actor.ActorSystem;
 import akka.pattern.AskableActorSelection;
+import akka.pattern.Patterns;
 import akka.util.Timeout;
 import org.coral.net.akka.api.IInnerMessage;
 import org.coral.net.akka.api.Messenger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.concurrent.Await;
+import scala.concurrent.Future;
 import scala.runtime.AbstractFunction1;
 import scala.util.Try;
 
@@ -35,8 +38,9 @@ public class AkkaSender {
 	}
 
 	protected ActorSelection select(String method) {
-		return this.actorSystem.actorSelection(
-				"akka://" + this.actorSystem.name() + "/user/" + method);
+		//TODO
+		String remoteAddress = "akka.tcp://cluster@" + "127.0.0.1" + ":" + "5003" + "/user/AppNodeActor";
+		return this.actorSystem.actorSelection(remoteAddress);
 	}
 
 	public Messenger asker(Duration timeout) {
@@ -133,21 +137,34 @@ public class AkkaSender {
 		protected CompletableFuture<Object> send(ActorSelection actor, Serializable msg) {
 			final CompletableFuture<Object> c = new CompletableFuture<>();
 			ActorSelection actorSelection = select(this.method);
-			actorSelection.resolveOne(RESOLVE_TIMEOUT).onComplete(new AbstractFunction1<Try<ActorRef>, Void>() {
-						@Override
-						public Void apply(Try<ActorRef> arg) {
-							if (arg.isSuccess()) {
-								actor.tell(msg, arg.get());
-								c.complete(null);
-							}
-							if (arg.isFailure()) {
-								final Throwable e = arg.failed().get();
-								LOGGER.debug("[cluster]Deployed? Cannot find actor for sender method: {}", method, e);
-								c.completeExceptionally(e);
-							}
-							return null;
-						}
-					}, actorSystem.dispatcher());
+
+			Future<Object> f = Patterns.ask(actorSelection, msg, 5000);
+			System.out.println("uuid: " + msg + " start");
+			Object result = null;
+			try {
+				result = Await.result(f, scala.concurrent.duration.Duration.create(5000, TimeUnit.MILLISECONDS));
+				System.out.println("uuid: " + msg + " end: " + result);
+				c.complete(result);
+			} catch (Exception e) {
+				e.printStackTrace();
+				c.complete(e);
+			}
+
+//			actorSelection.resolveOne(RESOLVE_TIMEOUT).onComplete(new AbstractFunction1<Try<ActorRef>, Void>() {
+//						@Override
+//						public Void apply(Try<ActorRef> arg) {
+//							if (arg.isSuccess()) {
+//
+//								c.complete(null);
+//							}
+//							if (arg.isFailure()) {
+//								final Throwable e = arg.failed().get();
+//								LOGGER.debug("[cluster]Deployed? Cannot find actor for sender method: {}", method, e);
+//								c.completeExceptionally(e);
+//							}
+//							return null;
+//						}
+//					}, actorSystem.dispatcher());
 			return c;
 		}
 	}

@@ -19,6 +19,8 @@ public class AkkaConf {
 //		conf.put("akka.actor.default-dispatcher.thread-pool-executor.max-pool-size-max", 128);
 		conf.put("akka.actor.provider", "akka.remote.RemoteActorRefProvider");
 		conf.put("akka.remote.netty.tcp.bind-hostname", "0.0.0.0");
+//		conf.put("akka.log-dead-letters-during-shutdown", "off");
+//		conf.put("akka.log-dead-letters", "0");
 		conf.put("akka.remote.netty.tcp.bind-port", Integer.parseInt(port));
 		conf.put("akka.remote.netty.tcp.hostname", host);
 		conf.put("akka.remote.netty.tcp.port", Integer.parseInt(port));

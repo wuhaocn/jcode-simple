@@ -1,4 +1,4 @@
-package org.coral.net.akka.access;
+package org.coral.net.akka.server;
 
 
 import org.coral.net.akka.AkkaCloudCluster;
@@ -10,27 +10,26 @@ import java.util.List;
 /**
  * @
  */
-public class AkkaAccessApp {
+public class AkkaMultiServer {
 
 
-	public void startServers(List<String> list) throws Exception {
+	public void startServers(List<String> list, Class classT) throws Exception {
 		for (String serverAddr : list) {
-			startServer(serverAddr);
+			startServer(serverAddr, classT);
 		}
 	}
 
-	public void startServer(String serverAddr) throws Exception {
+	public void startServer(String serverAddr, Class classT) throws Exception {
 
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 
 				try {
-
 					AkkaClusterConfig clusterConfig = AkkaClusterConfig.buildAkkaClusterConfig(AccessServerList.getIp(serverAddr),
 							AccessServerList.getPort(serverAddr));
 					AkkaCloudCluster akkaCloudCluster = new AkkaCloudCluster();
-					akkaCloudCluster.initClusters(clusterConfig, AccessActor.class);
+					akkaCloudCluster.initClusters(clusterConfig, classT);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
