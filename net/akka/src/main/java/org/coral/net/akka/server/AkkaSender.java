@@ -5,18 +5,14 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSelection;
 import akka.actor.ActorSystem;
 import akka.pattern.AskableActorSelection;
-import akka.pattern.Patterns;
 import akka.util.Timeout;
 import org.coral.net.akka.api.IInnerMessage;
 import org.coral.net.akka.api.Messenger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.concurrent.Await;
-import scala.concurrent.Future;
 import scala.runtime.AbstractFunction1;
 import scala.util.Try;
 
-import java.io.Serializable;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -38,10 +34,10 @@ public class AkkaSender {
 		return this.actorSystem.actorSelection(remoteAddress);
 	}
 
+
 	protected ActorSelection select(String method) {
-		//TODO
-		String remoteAddress = "akka.tcp://cluster@" + "127.0.0.1" + ":" + "5003" + "/user/AppNodeActor";
-		return this.actorSystem.actorSelection(remoteAddress);
+		return this.actorSystem.actorSelection(
+				"akka://" + this.actorSystem.name() + "/user/" + method);
 	}
 
 	public Messenger asker(Duration timeout) {
@@ -62,13 +58,11 @@ public class AkkaSender {
 
 	protected abstract class Transformer implements Messenger {
 		@Override
-		public CompletableFuture<Object> send(AkkaNode node, String cluster, IInnerMessage msg) {
-			LOGGER.debug("[cluster]Transformer outgoing message[method={},appId={},rid={}] due to throttler",
-					msg.getMethod(), msg.getAppId(), msg.getTargetResourceId());
+		public CompletableFuture<Object> send(AkkaNode node, String cluster, Object msg) {
 			return this.send(select(node), msg);
 		}
 
-		protected abstract CompletableFuture<Object> send(ActorSelection actor, Serializable msg);
+		protected abstract CompletableFuture<Object> send(ActorSelection actor, Object msg);
 	}
 
 	protected class Asker extends Transformer {
@@ -79,7 +73,7 @@ public class AkkaSender {
 		}
 
 		@Override
-		protected CompletableFuture<Object> send(ActorSelection actor, Serializable msg) {
+		protected CompletableFuture<Object> send(ActorSelection actor, Object msg) {
 			final CompletableFuture<Object> c = new CompletableFuture<>();
 			new AskableActorSelection(actor).ask(msg, this.timeout)
 					.onComplete(new AbstractFunction1<Try<Object>, Void>() {
@@ -96,6 +90,7 @@ public class AkkaSender {
 					}, actorSystem.dispatcher());
 			return c;
 		}
+
 	}
 
 	protected class Teller extends Transformer {
@@ -106,7 +101,7 @@ public class AkkaSender {
 		}
 
 		@Override
-		protected CompletableFuture<Object> send(ActorSelection actor, Serializable msg) {
+		protected CompletableFuture<Object> send(ActorSelection actor, Object msg) {
 			actor.tell(msg, this.sender);
 			return CompletableFuture.completedFuture(null);
 		}
@@ -120,7 +115,7 @@ public class AkkaSender {
 		}
 
 		@Override
-		protected CompletableFuture<Object> send(ActorSelection actor, Serializable msg) {
+		protected CompletableFuture<Object> send(ActorSelection actor, Object msg) {
 			actor.forward(msg, this.context);
 			return CompletableFuture.completedFuture(null);
 		}
@@ -135,38 +130,27 @@ public class AkkaSender {
 		}
 
 		@Override
-		protected CompletableFuture<Object> send(ActorSelection actor, Serializable msg) {
+		protected CompletableFuture<Object> send(ActorSelection actor, Object msg) {
 			final CompletableFuture<Object> c = new CompletableFuture<>();
-			//ActorSelection actorSelection = select(this.method);
-
-			Future<Object> f = Patterns.ask(actor, msg, 5000);
-			System.out.println("uuid: " + msg + " start");
-			Object result = null;
-			try {
-				result = Await.result(f, scala.concurrent.duration.Duration.create(5000, TimeUnit.MILLISECONDS));
-				System.out.println("uuid: " + msg + " end: " + result);
-				c.complete(result);
-			} catch (Exception e) {
-				e.printStackTrace();
-				c.complete(e);
-			}
-
-//			actorSelection.resolveOne(RESOLVE_TIMEOUT).onComplete(new AbstractFunction1<Try<ActorRef>, Void>() {
-//						@Override
-//						public Void apply(Try<ActorRef> arg) {
-//							if (arg.isSuccess()) {
-//
-//								c.complete(null);
-//							}
-//							if (arg.isFailure()) {
-//								final Throwable e = arg.failed().get();
-//								LOGGER.debug("[cluster]Deployed? Cannot find actor for sender method: {}", method, e);
-//								c.completeExceptionally(e);
-//							}
-//							return null;
-//						}
-//					}, actorSystem.dispatcher());
+			select(this.method).resolveOne(RESOLVE_TIMEOUT)
+					.onComplete(new AbstractFunction1<Try<ActorRef>, Void>() {
+						@Override
+						public Void apply(Try<ActorRef> arg) {
+							if (arg.isSuccess()) {
+								actor.tell(msg, arg.get());
+								c.complete(null);
+							}
+							if (arg.isFailure()) {
+								final Throwable e = arg.failed().get();
+								LOGGER.debug("[cluster]Deployed? Cannot find actor for sender method: {}", method, e);
+								c.completeExceptionally(e);
+							}
+							return null;
+						}
+					}, actorSystem.dispatcher());
 			return c;
 		}
 	}
+
+
 }

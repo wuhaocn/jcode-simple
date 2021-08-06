@@ -14,5 +14,5 @@ public interface Messenger {
 	 * @param msg
 	 * @return
 	 */
-    CompletableFuture<Object> send(AkkaNode node, String cluster, IInnerMessage msg);
+    CompletableFuture<Object> send(AkkaNode node, String cluster, Object msg);
 }

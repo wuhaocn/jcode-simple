@@ -98,8 +98,8 @@ public class AccessServerList {
 		asList.addAll(getServerList());
 		asList.addAll(getServer2List());
 		asList.addAll(getServer3List());
-		asList.addAll(getServer4List());
-		asList.addAll(getServer5List());
+//		asList.addAll(getServer4List());
+//		asList.addAll(getServer5List());
 		return asList;
 	}
 

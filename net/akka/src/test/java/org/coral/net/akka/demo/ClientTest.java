@@ -54,7 +54,7 @@ public class ClientTest {
 						System.out.println("uuid: " + uuid + " start");
 						Object result = Await.result(f, Duration.create(5000, TimeUnit.MILLISECONDS));
 						System.out.println("uuid: " + uuid + " end: " + result);
-						Thread.sleep(5000);
+						Thread.sleep(1500);
 						//system.terminate();
 					} catch (Exception e) {
 						e.printStackTrace();

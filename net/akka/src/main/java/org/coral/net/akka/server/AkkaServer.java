@@ -40,6 +40,7 @@ public class AkkaServer {
 		this.akkaAddress = AddressFromURIString.parse(endpoint);
 		this.akkaSystem = AkkaProfiler.createSystem(cluster, conf);
 		this.akkaSystem.actorOf(Props.create(classT).withDeploy(new Deploy(new RemoteScope(this.akkaAddress))), classT.getSimpleName());
+		this.akkaSystem.actorOf(Props.create(InnerActor.class).withDeploy(new Deploy(new RemoteScope(this.akkaAddress))), InnerActor.class.getSimpleName());
 		//this.akkaSystem.actorOf(Props.create(classT), classT.getSimpleName());
 		LOGGER.info("start Avatar actor is inited with config : {}", akkaAddress);
 	}

@@ -48,46 +48,22 @@ public class AkkaCloudCluster {
 		}
 	}
 
-	public String routeMessage(IRoute message) {
-		return routeMessage(message, ActorRef.noSender());
-	}
-
-	public String routeMessage(IRoute message, ActorRef sender) {
-		final AkkaNode node = unicastInCluster(clusterConfig.getServerCluster(), message, actorSender.teller(sender)).getKey();
-		if (node == null) {
-			return null;
-		}
-		return node.getName() + "@" + node.getCluster() + "@" + node.getSite();
-	}
 
 
-	public String routeMessage(IRoute message, String sender) {
-		final AkkaNode node = unicastInCluster(
-				clusterConfig.getServerCluster(), message, actorSender.resolver(sender)).getKey();
+	public String routeMessage(Object message, String sender) {
+		final AkkaNode node = unicastInCluster(clusterConfig.getServerCluster(), message, actorSender.resolver(sender)).getKey();
 		return node == null ? null : node.getName();
 	}
 
 
-	/**
-	 * 在可用 Site 范围内进行单点发送
-	 *
-	 * @param cluster 在目标集群内进行路由 私有云默认忽略,使用当前的clustername
-	 * @param message 影响发送范围的属性：appId + method + targetResourceId
-	 * @param sender  发送方式
-	 * @return 目标节点: Promise
-	 */
-	protected Entry<AkkaNode, CompletableFuture<Object>> unicastInCluster(
-			String cluster, IRoute message, Messenger sender) {
+	protected Entry<AkkaNode, CompletableFuture<Object>> unicastInCluster(String cluster, Object message, Messenger sender) {
 		final AkkaNode node = AkkaNodeManager.getNode();
 		final CompletableFuture<Object> future;
 		if (node != null) {
-			future = sender.send(node, cluster, message.getRouter());
-			LOGGER.debug("[cluster]RouteMessage[appId={}, method={}, rid={}] is sent to: {}",
-					message.getAppId(), message.getMethod(), message.getTargetResourceId(),
-					node.getAkkaAddr());
+			future = sender.send(node, cluster, message);
+
 		} else {
-			LOGGER.error("[cluster]Locator not found: appId={}, method={}, rid={}",
-					message.getAppId(), message.getMethod(), message.getTargetResourceId());
+			LOGGER.error("[cluster]Locator not found: appId={}, method={}, rid={}", 1, 1, 1);
 			future = null;
 		}
 		return new SimpleEntry<>(node, future);
