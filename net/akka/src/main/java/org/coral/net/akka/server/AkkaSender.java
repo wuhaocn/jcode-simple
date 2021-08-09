@@ -6,8 +6,8 @@ import akka.actor.ActorSelection;
 import akka.actor.ActorSystem;
 import akka.pattern.AskableActorSelection;
 import akka.util.Timeout;
-import org.coral.net.akka.api.IInnerMessage;
-import org.coral.net.akka.api.Messenger;
+import org.coral.net.akka.api.AppMessage;
+import org.coral.net.akka.api.ITransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.runtime.AbstractFunction1;
@@ -40,29 +40,29 @@ public class AkkaSender {
 				"akka://" + this.actorSystem.name() + "/user/" + method);
 	}
 
-	public Messenger asker(Duration timeout) {
+	public ITransformer asker(Duration timeout) {
 		return new Asker(timeout);
 	}
 
-	public Messenger teller(ActorRef sender) {
+	public ITransformer teller(ActorRef sender) {
 		return new Teller(sender);
 	}
 
-	public Messenger forwarder(ActorContext context) {
+	public ITransformer forwarder(ActorContext context) {
 		return new Forwarder(context);
 	}
 
-	public Messenger resolver(String sender) {
+	public ITransformer resolver(String sender) {
 		return new Resolver(sender);
 	}
 
-	protected abstract class Transformer implements Messenger {
+	protected abstract class Transformer implements ITransformer {
 		@Override
-		public CompletableFuture<Object> send(AkkaNode node, String cluster, Object msg) {
+		public CompletableFuture<Object> send(AkkaNode node, String cluster, AppMessage msg) {
 			return this.send(select(node), msg);
 		}
 
-		protected abstract CompletableFuture<Object> send(ActorSelection actor, Object msg);
+		protected abstract CompletableFuture<Object> send(ActorSelection actor, AppMessage msg);
 	}
 
 	protected class Asker extends Transformer {
@@ -73,7 +73,7 @@ public class AkkaSender {
 		}
 
 		@Override
-		protected CompletableFuture<Object> send(ActorSelection actor, Object msg) {
+		protected CompletableFuture<Object> send(ActorSelection actor, AppMessage msg) {
 			final CompletableFuture<Object> c = new CompletableFuture<>();
 			new AskableActorSelection(actor).ask(msg, this.timeout)
 					.onComplete(new AbstractFunction1<Try<Object>, Void>() {
@@ -101,7 +101,7 @@ public class AkkaSender {
 		}
 
 		@Override
-		protected CompletableFuture<Object> send(ActorSelection actor, Object msg) {
+		protected CompletableFuture<Object> send(ActorSelection actor, AppMessage msg) {
 			actor.tell(msg, this.sender);
 			return CompletableFuture.completedFuture(null);
 		}
@@ -115,7 +115,7 @@ public class AkkaSender {
 		}
 
 		@Override
-		protected CompletableFuture<Object> send(ActorSelection actor, Object msg) {
+		protected CompletableFuture<Object> send(ActorSelection actor, AppMessage msg) {
 			actor.forward(msg, this.context);
 			return CompletableFuture.completedFuture(null);
 		}
@@ -130,7 +130,7 @@ public class AkkaSender {
 		}
 
 		@Override
-		protected CompletableFuture<Object> send(ActorSelection actor, Object msg) {
+		protected CompletableFuture<Object> send(ActorSelection actor, AppMessage msg) {
 			final CompletableFuture<Object> c = new CompletableFuture<>();
 			select(this.method).resolveOne(RESOLVE_TIMEOUT)
 					.onComplete(new AbstractFunction1<Try<ActorRef>, Void>() {

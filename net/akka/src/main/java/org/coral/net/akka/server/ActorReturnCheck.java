@@ -1,6 +1,10 @@
 package org.coral.net.akka.server;
 
-import scala.collection.mutable.LinkedHashMap;
+import org.coral.net.akka.api.AppMessage;
+
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * ActorReturnCheck
@@ -10,33 +14,40 @@ import scala.collection.mutable.LinkedHashMap;
  */
 public class ActorReturnCheck {
 
-	public static LinkedHashMap linkedHashMap = new LinkedHashMap();
+	public static LinkedHashMap<String, AppMessage> linkedHashMap = new LinkedHashMap();
 
 	/**
 	 * @param key
-	 * @param object
+	 * @param appMessage
 	 */
-	public static void setResult(String key, Object object) {
-		linkedHashMap.put(key, object);
+	public static synchronized void putSign(String key, AppMessage appMessage) {
+		linkedHashMap.put(key, appMessage);
 	}
 
 	/**
+	 * 结果返回 remove
+	 *
 	 * @param key
 	 * @return
 	 */
-	public static void getResult(String key, String ret) {
-		try {
+	public static synchronized void removeSign(String key) {
+		linkedHashMap.remove(key);
+	}
 
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		Object o = linkedHashMap.get(key);
-		int ol = key.length();
-		int rl = ret.length();
+	public static synchronized void printCurRst(){
 
-		if (!(ol == rl)) {
-			throw new RuntimeException("getResult Time Out" + o);
+		Iterator<Map.Entry<String, AppMessage>> entries = linkedHashMap.entrySet().iterator();
+		System.out.println("-----------------start------------------------");
+		System.out.println("-----------------     ------------------------");
+		while (entries.hasNext()) {
+			Map.Entry<String, AppMessage> entry = entries.next();
+			AppMessage appMessage = entry.getValue();
+			long cost = System.currentTimeMillis() - appMessage.getTimeSign();
+			if (cost > 50000){
+				System.out.println(entry.getValue());
+			}
 		}
+		System.out.println("-----------------end------------------------");
+		System.out.println("-------------------------------------------");
 	}
 }

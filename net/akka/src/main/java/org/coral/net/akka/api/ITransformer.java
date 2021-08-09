@@ -5,7 +5,7 @@ import org.coral.net.akka.server.AkkaNode;
 
 import java.util.concurrent.CompletableFuture;
 
-public interface Messenger {
+public interface ITransformer {
 	/**
 	 * send
 	 *
@@ -14,5 +14,5 @@ public interface Messenger {
 	 * @param msg
 	 * @return
 	 */
-    CompletableFuture<Object> send(AkkaNode node, String cluster, Object msg);
+    CompletableFuture<Object> send(AkkaNode node, String cluster, AppMessage msg);
 }

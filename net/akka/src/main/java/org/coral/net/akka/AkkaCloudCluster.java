@@ -1,9 +1,8 @@
 package org.coral.net.akka;
 
-import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import org.coral.net.akka.api.IRoute;
-import org.coral.net.akka.api.Messenger;
+import org.coral.net.akka.api.AppMessage;
+import org.coral.net.akka.api.ITransformer;
 import org.coral.net.akka.config.AkkaClusterConfig;
 import org.coral.net.akka.server.AkkaNode;
 import org.coral.net.akka.server.AkkaNodeManager;
@@ -50,14 +49,14 @@ public class AkkaCloudCluster {
 
 
 
-	public String routeMessage(Object message, String sender) {
+	public String routeMessage(AppMessage message, String sender) {
 		final AkkaNode node = unicastInCluster(clusterConfig.getServerCluster(), message, actorSender.resolver(sender)).getKey();
 		return node == null ? null : node.getName();
 	}
 
 
-	protected Entry<AkkaNode, CompletableFuture<Object>> unicastInCluster(String cluster, Object message, Messenger sender) {
-		final AkkaNode node = AkkaNodeManager.getNode();
+	protected Entry<AkkaNode, CompletableFuture<Object>> unicastInCluster(String cluster, AppMessage message, ITransformer sender) {
+		final AkkaNode node = AkkaNodeManager.getNode(message);
 		final CompletableFuture<Object> future;
 		if (node != null) {
 			future = sender.send(node, cluster, message);

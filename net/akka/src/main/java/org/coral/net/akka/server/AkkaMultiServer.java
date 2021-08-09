@@ -8,7 +8,7 @@ import org.coral.net.akka.config.AkkaClusterConfig;
 import java.util.List;
 
 /**
- * @
+ * @author wuhao
  */
 public class AkkaMultiServer {
 
@@ -19,6 +19,21 @@ public class AkkaMultiServer {
 			startServer(serverAddr, classT, i);
 			i++;
 		}
+
+		Thread thread1 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					ActorReturnCheck.printCurRst();
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		thread1.start();
 	}
 
 	public void startServer(String serverAddr, Class classT, int i) throws Exception {
@@ -39,6 +54,8 @@ public class AkkaMultiServer {
 			}
 		});
 		thread.start();
+
+
 	}
 
 }

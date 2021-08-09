@@ -5,6 +5,7 @@ import akka.actor.ActorSystem;
 import akka.pattern.Patterns;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import org.coral.net.akka.api.AppMessage;
 import org.coral.net.akka.config.AccessServerList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,15 +47,18 @@ public class ClientTest {
 			public void run() {
 				while (true){
 					try {
-						String remoteAddress = "akka.tcp://cluster@" + dstIp + ":" + dstPort + "/user/AccessActor";
-						String uuid = UUID.randomUUID().toString();
-						System.out.println("init " + remoteAddress + " uuid:" + uuid);
-						ActorSelection selection = system.actorSelection(remoteAddress);
-						Future<Object> f = Patterns.ask(selection, uuid, 5000);
-						System.out.println("uuid: " + uuid + " start");
-						Object result = Await.result(f, Duration.create(5000, TimeUnit.MILLISECONDS));
-						System.out.println("uuid: " + uuid + " end: " + result);
-						Thread.sleep(1500);
+						for (int i = 0; i < AccessServerList.getAppNodeList().size(); i++){
+							String remoteAddress = "akka.tcp://cluster@" + dstIp + ":" + dstPort + "/user/AccessActor";
+							String uuid = UUID.randomUUID().toString();
+							System.out.println("init " + remoteAddress + " uuid:" + uuid);
+							ActorSelection selection = system.actorSelection(remoteAddress);
+							Future<Object> f = Patterns.ask(selection, AppMessage.build(i, uuid, uuid), 5000);
+							System.out.println("uuid: " + uuid + " start");
+							Object result = Await.result(f, Duration.create(3000, TimeUnit.MILLISECONDS));
+							System.out.println("uuid: " + uuid + " end: " + result);
+						}
+
+						Thread.sleep(20000);
 						//system.terminate();
 					} catch (Exception e) {
 						e.printStackTrace();

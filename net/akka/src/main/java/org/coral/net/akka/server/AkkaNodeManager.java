@@ -1,7 +1,7 @@
 package org.coral.net.akka.server;
 
+import org.coral.net.akka.api.AppMessage;
 import org.coral.net.akka.config.AccessServerList;
-import org.coral.net.akka.config.AkkaClusterConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +30,8 @@ public class AkkaNodeManager {
 	 *
 	 * @return
 	 */
-	public static AkkaNode getNode() {
-		Random random = new Random();
-		int i = random.nextInt(akkaNodeList.size());
-		return akkaNodeList.get(i);
+	public static AkkaNode getNode(AppMessage appMessage) {
+		return akkaNodeList.get(appMessage.getSeq());
 	}
 
 }
