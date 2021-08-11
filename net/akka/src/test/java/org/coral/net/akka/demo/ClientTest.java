@@ -6,7 +6,7 @@ import akka.pattern.Patterns;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.coral.net.akka.api.AppMessage;
-import org.coral.net.akka.config.AccessServerList;
+import org.coral.net.akka.config.AkkaServerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.concurrent.Await;
@@ -30,11 +30,11 @@ public class ClientTest {
 
 	public void testServer() throws Exception {
 		int localPort = 20000;
-		List<String> serverList = AccessServerList.getAllServerList();
+		List<String> serverList = AkkaServerConfig.getAllServerList();
 		for (String addr : serverList) {
 			localPort++;
-			String dstIP = AccessServerList.getIp(addr);
-			String dstPort = AccessServerList.getPort(addr);
+			String dstIP = AkkaServerConfig.getIp(addr);
+			String dstPort = AkkaServerConfig.getPort(addr);
 			send(localPort, dstIP, dstPort);
 		}
 	}
@@ -47,7 +47,7 @@ public class ClientTest {
 			public void run() {
 				while (true){
 					try {
-						for (int i = 0; i < AccessServerList.getAppNodeList().size(); i++){
+						for (int i = 0; i < AkkaServerConfig.getAppNodeList().size(); i++){
 							String remoteAddress = "akka.tcp://cluster@" + dstIp + ":" + dstPort + "/user/AccessActor";
 							String uuid = UUID.randomUUID().toString();
 							System.out.println("init " + remoteAddress + " uuid:" + uuid);
@@ -58,7 +58,7 @@ public class ClientTest {
 							System.out.println("uuid: " + uuid + " end: " + result);
 						}
 
-						Thread.sleep(20000);
+						Thread.sleep(10000);
 						//system.terminate();
 					} catch (Exception e) {
 						e.printStackTrace();

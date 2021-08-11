@@ -1,11 +1,10 @@
 package org.coral.net.akka.server;
 
 import org.coral.net.akka.api.AppMessage;
-import org.coral.net.akka.config.AccessServerList;
+import org.coral.net.akka.config.AkkaServerConfig;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * AkkaNodeManager
@@ -17,7 +16,7 @@ public class AkkaNodeManager {
 	public static List<AkkaNode> akkaNodeList = new ArrayList<>();
 
 	static {
-		for (String addr: AccessServerList.getAppNodeList()){
+		for (String addr: AkkaServerConfig.getAppNodeList()){
 			AkkaNode akkaNode = new AkkaNode();
 			akkaNode.setAkkaAddr(addr);
 			akkaNodeList.add(akkaNode);

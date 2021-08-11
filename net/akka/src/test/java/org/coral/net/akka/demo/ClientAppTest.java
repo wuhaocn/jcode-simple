@@ -5,7 +5,7 @@ import akka.actor.ActorSystem;
 import akka.pattern.Patterns;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import org.coral.net.akka.config.AccessServerList;
+import org.coral.net.akka.config.AkkaServerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.concurrent.Await;
@@ -29,11 +29,11 @@ public class ClientAppTest {
 
 	public void testServer() throws Exception {
 		int localPort = 20000;
-		List<String> serverList = AccessServerList.getAppNodeList();
+		List<String> serverList = AkkaServerConfig.getAppNodeList();
 		for (String addr : serverList) {
 			localPort++;
-			String dstIP = AccessServerList.getIp(addr);
-			String dstPort = AccessServerList.getPort(addr);
+			String dstIP = AkkaServerConfig.getIp(addr);
+			String dstPort = AkkaServerConfig.getPort(addr);
 			send(localPort, dstIP, dstPort);
 		}
 	}

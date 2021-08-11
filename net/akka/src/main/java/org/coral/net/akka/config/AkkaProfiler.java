@@ -61,21 +61,17 @@ public class AkkaProfiler {
 			if (event instanceof AssociationEvent) {
 				final AssociationEvent conn = (AssociationEvent) event;
 				if (event instanceof AssociationErrorEvent) {
-					//this._error.mark();
 				} else if (conn.localAddress() != null && conn.remoteAddress() != null) {
 					final String pair = conn.localAddress() + "-" + conn.remoteAddress();
 					if (conn instanceof AssociatedEvent) {
 						if (this._conns.add(pair)) {
-							//this._count.inc();
 						}
 					} else if (conn instanceof DisassociatedEvent) {
 						if (this._conns.remove(pair)) {
-							//this._count.dec();
 						}
 					}
 				}
 			} else if (event instanceof RemotingErrorEvent) {
-				//this._error.mark();
 			}
 		}
 	}
@@ -122,11 +118,9 @@ public class AkkaProfiler {
 
 		public static class Service extends AbstractExecutorService {
 			private final ExecutorService _executor;
-			//private final PerfCounter.Timer _timer;
 
 			public Service(ExecutorService executor) {
 				this._executor = executor;
-				//	this._timer = PerfCounter.timer("akka", "executor", "running");
 			}
 
 			@Override
@@ -180,17 +174,9 @@ public class AkkaProfiler {
 
 		public static class MQueue implements MessageQueue {
 			private final MessageQueue _queue;
-//			private final Counter _counter;
-//			private final Meter _enqueue;
-//			private final Meter _dequeue;
-//			private final Meter _failure;
 
 			public MQueue(MessageQueue queue) {
 				this._queue = queue;
-//				this._counter = PerfCounter.counter("akka", "mailbox", "message");
-//				this._enqueue = PerfCounter.meter("akka", "mailbox", "enqueue");
-//				this._dequeue = PerfCounter.meter("akka", "mailbox", "dequeue");
-//				this._failure = PerfCounter.meter("akka", "mailbox", "failure");
 			}
 
 			@Override
@@ -204,10 +190,6 @@ public class AkkaProfiler {
 			@Override
 			public Envelope dequeue() {
 				Envelope msg = this._queue.dequeue();
-				if (msg != null) {
-//					this._counter.dec();
-//					this._dequeue.mark();
-				}
 				return msg;
 			}
 
@@ -215,8 +197,6 @@ public class AkkaProfiler {
 			public void enqueue(ActorRef actor, Envelope msg) {
 				try {
 					this._queue.enqueue(actor, msg);
-//					this._counter.inc();
-//					this._enqueue.mark();
 				} catch (Exception e) {
 					LOGGER.error("enqueue:{}", msg, e);
 					throw e;

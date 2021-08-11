@@ -2,8 +2,8 @@ package org.coral.net.akka.server;
 
 
 import org.coral.net.akka.AkkaCloudCluster;
-import org.coral.net.akka.config.AccessServerList;
 import org.coral.net.akka.config.AkkaClusterConfig;
+import org.coral.net.akka.config.AkkaServerConfig;
 
 import java.util.List;
 
@@ -43,9 +43,8 @@ public class AkkaMultiServer {
 			public void run() {
 
 				try {
-					Thread.sleep(i * 3000);
-					AkkaClusterConfig clusterConfig = AkkaClusterConfig.buildAkkaClusterConfig(AccessServerList.getIp(serverAddr),
-							AccessServerList.getPort(serverAddr));
+					AkkaClusterConfig clusterConfig = AkkaClusterConfig.buildAkkaClusterConfig(AkkaServerConfig.getIp(serverAddr),
+							AkkaServerConfig.getPort(serverAddr));
 					AkkaCloudCluster akkaCloudCluster = new AkkaCloudCluster();
 					akkaCloudCluster.initClusters(clusterConfig, classT);
 				} catch (Exception e) {

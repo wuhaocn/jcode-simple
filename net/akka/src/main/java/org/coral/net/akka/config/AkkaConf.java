@@ -12,11 +12,11 @@ public class AkkaConf {
 
 	public static Map<String, Object> getConfig(String host, String port) {
 		final Map<String, Object> conf = new HashMap<>();
-//		conf.put("akka.remote.netty.tcp.maximum-frame-size", 10485760);
-//		conf.put("akka.actor.default-dispatcher.thread-pool-executor.core-pool-size-factor", 16.0);
-//		conf.put("akka.actor.default-dispatcher.thread-pool-executor.max-pool-size-factor", 16.0);
-//		conf.put("akka.actor.default-dispatcher.thread-pool-executor.core-pool-size-max", 128);
-//		conf.put("akka.actor.default-dispatcher.thread-pool-executor.max-pool-size-max", 128);
+		conf.put("akka.remote.netty.tcp.maximum-frame-size", 10485760);
+		conf.put("akka.actor.default-dispatcher.thread-pool-executor.core-pool-size-factor", 16.0);
+		conf.put("akka.actor.default-dispatcher.thread-pool-executor.max-pool-size-factor", 16.0);
+		conf.put("akka.actor.default-dispatcher.thread-pool-executor.core-pool-size-max", 128);
+		conf.put("akka.actor.default-dispatcher.thread-pool-executor.max-pool-size-max", 128);
 		conf.put("akka.actor.provider", "akka.remote.RemoteActorRefProvider");
 		conf.put("akka.remote.netty.tcp.bind-hostname", "0.0.0.0");
 //		conf.put("akka.log-dead-letters-during-shutdown", "off");

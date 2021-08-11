@@ -101,10 +101,8 @@ public class AppMessage implements Serializable {
 		sb.append("time:").append(DateFormatUtils.ISO_8601_EXTENDED_TIME_FORMAT.format(timeSign)).append(" ");
 		sb.append("seq:").append(seq).append(" ");
 		sb.append("uuid:").append(uuid).append(" ");
-		sb.append("method:").append(method).append(" ");
-		sb.append("version:").append(version).append(" ");
 		sb.append("message:").append(message).append(" ");
-		sb.append("message:").append(message).append(" ");
+		sb.append("accessNode:").append(accessNode).append(" ");
 		return sb.toString();
 	}
 }

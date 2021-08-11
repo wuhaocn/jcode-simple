@@ -1,5 +1,6 @@
 package org.coral.net.akka.server.actor;
 
+import akka.actor.ActorRef;
 import akka.actor.UntypedActorWithStash;
 
 import java.util.Random;
@@ -18,12 +19,11 @@ public class AppNodeActor extends UntypedActorWithStash {
 
     @Override
     public void onReceive(Object o) throws Exception {
-		System.out.println("AppNodeActor:onReceive:Object " + o);
+    	System.out.println("AppNodeActor:onReceive:Object " + o);
 		Random random = new Random();
-		int i = random.nextInt(50);
+		int i = random.nextInt(10);
 		Thread.sleep(i);
-		getSender().tell(o, getSelf());
+		getSender().tell(o, ActorRef.noSender());
 		System.out.println("AppNodeActor:Return:Object " + o);
-
     }
 }

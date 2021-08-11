@@ -4,7 +4,7 @@ import akka.actor.UntypedActorWithStash;
 import org.coral.net.akka.AkkaCloudCluster;
 import org.coral.net.akka.AkkaCloudManager;
 import org.coral.net.akka.api.AppMessage;
-import org.coral.net.akka.config.AccessServerList;
+import org.coral.net.akka.config.AkkaServerConfig;
 import org.coral.net.akka.server.ActorReturnCheck;
 
 public class AccessActor extends UntypedActorWithStash {
@@ -28,7 +28,7 @@ public class AccessActor extends UntypedActorWithStash {
 	public void processAppMessage(AppMessage appMessage) throws Exception {
 		String serverAddress = this.context().system().provider().getDefaultAddress().toString();
 		AkkaCloudCluster akkaCloudCluster = AkkaCloudManager.getAkkaCloudCluster(serverAddress);
-		for (int i = 0; i < AccessServerList.getToAppNodeCount(); i++) {
+		for (int i = 0; i < AkkaServerConfig.getToAppNodeCount(); i++) {
 			AppMessage appMessageTmp = AppMessage.copy(appMessage);
 			appMessageTmp.setUuid(appMessageTmp.getUuid() + i);
 			appMessageTmp.setTimeSign(System.currentTimeMillis());

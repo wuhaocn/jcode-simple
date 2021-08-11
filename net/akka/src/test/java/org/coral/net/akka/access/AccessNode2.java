@@ -2,7 +2,7 @@ package org.coral.net.akka.access;
 
 import org.coral.net.akka.server.actor.AccessActor;
 import org.coral.net.akka.server.AkkaMultiServer;
-import org.coral.net.akka.config.AccessServerList;
+import org.coral.net.akka.config.AkkaServerConfig;
 
 /**
  * @author wuhao
@@ -11,6 +11,6 @@ import org.coral.net.akka.config.AccessServerList;
 public class AccessNode2 {
 	public static void main(String[] args) throws Exception {
 		AkkaMultiServer akkaAccessApp = new AkkaMultiServer();
-		akkaAccessApp.startServers(AccessServerList.getServer2List(), AccessActor.class);
+		akkaAccessApp.startServers(AkkaServerConfig.getServer2List(), AccessActor.class);
 	}
 }
