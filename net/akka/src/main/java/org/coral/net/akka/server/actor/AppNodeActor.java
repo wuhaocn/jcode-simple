@@ -2,6 +2,7 @@ package org.coral.net.akka.server.actor;
 
 import akka.actor.ActorRef;
 import akka.actor.UntypedActorWithStash;
+import org.coral.net.akka.api.AppMessage;
 
 import java.util.Random;
 
@@ -23,7 +24,12 @@ public class AppNodeActor extends UntypedActorWithStash {
 		Random random = new Random();
 		int i = random.nextInt(10);
 		Thread.sleep(i);
-		getSender().tell(o, ActorRef.noSender());
+		if (o instanceof AppMessage){
+			AppMessage appMessage = (AppMessage) o;
+			appMessage.setMessage("12345678901234567890");
+			getSender().tell(o, ActorRef.noSender());
+		}
+
 		System.out.println("AppNodeActor:Return:Object " + o);
     }
 }
