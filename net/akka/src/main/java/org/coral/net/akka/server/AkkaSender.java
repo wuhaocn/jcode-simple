@@ -29,8 +29,8 @@ public class AkkaSender {
 		this.actorSystem = akka;
 	}
 
-	protected ActorSelection select(AkkaNode node) {
-		String remoteAddress = "akka.tcp://cluster@" + node.getAkkaAddr() + "/user/AppNodeActor";
+	protected ActorSelection select(AkkaNode node, AppMessage msg) {
+		String remoteAddress = "akka.tcp://cluster@" + node.getAkkaAddr() + "/user/" + msg.getMethod();
 		return this.actorSystem.actorSelection(remoteAddress);
 	}
 
@@ -59,7 +59,7 @@ public class AkkaSender {
 	protected abstract class Transformer implements ITransformer {
 		@Override
 		public CompletableFuture<Object> send(AkkaNode node, String cluster, AppMessage msg) {
-			return this.send(select(node), msg);
+			return this.send(select(node, msg), msg);
 		}
 
 		protected abstract CompletableFuture<Object> send(ActorSelection actor, AppMessage msg);

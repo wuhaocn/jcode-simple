@@ -54,8 +54,14 @@ public class ClientTest {
 							ActorSelection selection = system.actorSelection(remoteAddress);
 							Future<Object> f = Patterns.ask(selection, AppMessage.build(i, uuid, uuid), 5000);
 							System.out.println("uuid: " + uuid + " start");
-							Object result = Await.result(f, Duration.create(3000, TimeUnit.MILLISECONDS));
-							System.out.println("uuid: " + uuid + " end: " + result);
+							try {
+								Object result = Await.result(f, Duration.create(3000, TimeUnit.MILLISECONDS));
+								System.out.println("uuid: " + uuid + " end: " + result);
+							} catch (Exception e ){
+								System.out.println("Exception uuid: " + uuid + " end: " + remoteAddress);
+								e.printStackTrace();
+							}
+
 						}
 
 						Thread.sleep(10000);

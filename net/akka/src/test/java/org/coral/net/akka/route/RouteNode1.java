@@ -1,16 +1,17 @@
-package org.coral.net.akka.access;
+package org.coral.net.akka.route;
 
 import org.coral.net.akka.config.AkkaServerConfig;
 import org.coral.net.akka.server.AkkaMultiServer;
-import org.coral.net.akka.server.actor.AccessActor;
+import org.coral.net.akka.server.actor.RouteActor;
 
 /**
  * @author wuhao
- * @createTime 2021-08-05 19:02:00
+ * @createTime 2021-08-13 15:02:00
  */
-public class AccessNode5 {
+public class RouteNode1 {
 	public static void main(String[] args) throws Exception {
 		AkkaMultiServer akkaAccessApp = new AkkaMultiServer();
-		akkaAccessApp.startServers(AkkaServerConfig.getServer5List(), AccessActor.class);
+		akkaAccessApp.startServers(AkkaServerConfig.getRouteNodeList(), RouteActor.class);
 	}
+
 }

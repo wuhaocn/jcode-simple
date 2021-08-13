@@ -14,12 +14,18 @@ import java.util.List;
  */
 public class AkkaNodeManager {
 	public static List<AkkaNode> akkaNodeList = new ArrayList<>();
+	public static List<AkkaNode> akkaNodeRouteList = new ArrayList<>();
 
 	static {
 		for (String addr: AkkaServerConfig.getAppNodeList()){
 			AkkaNode akkaNode = new AkkaNode();
 			akkaNode.setAkkaAddr(addr);
 			akkaNodeList.add(akkaNode);
+		}
+		for (String addr: AkkaServerConfig.getRouteNodeList()){
+			AkkaNode akkaNode = new AkkaNode();
+			akkaNode.setAkkaAddr(addr);
+			akkaNodeRouteList.add(akkaNode);
 		}
 	}
 
@@ -30,6 +36,9 @@ public class AkkaNodeManager {
 	 * @return
 	 */
 	public static AkkaNode getNode(AppMessage appMessage) {
+		if (appMessage.getMethod().equalsIgnoreCase("RouteActor")){
+			return akkaNodeRouteList.get(appMessage.getSeq());
+		}
 		return akkaNodeList.get(appMessage.getSeq());
 	}
 

@@ -1,5 +1,6 @@
 package org.coral.net.akka;
 
+import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import org.coral.net.akka.api.AppMessage;
 import org.coral.net.akka.api.ITransformer;
@@ -51,6 +52,10 @@ public class AkkaCloudCluster {
 
 	public String routeMessage(AppMessage message, String sender) {
 		final AkkaNode node = unicastInCluster(clusterConfig.getServerCluster(), message, actorSender.resolver(sender)).getKey();
+		return node == null ? null : node.getName();
+	}
+	public String routeMessage(AppMessage message, ActorRef sender) {
+		final AkkaNode node = unicastInCluster(clusterConfig.getServerCluster(), message, actorSender.teller(sender)).getKey();
 		return node == null ? null : node.getName();
 	}
 
