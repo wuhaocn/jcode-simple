@@ -37,17 +37,14 @@ public class ActorReturnCheck {
 	public static synchronized void printCurRst(){
 
 		Iterator<Map.Entry<String, AppMessage>> entries = linkedHashMap.entrySet().iterator();
-		System.out.println("-----------------start------------------------");
-		System.out.println("-----------------     ------------------------");
+		long time = System.currentTimeMillis();
 		while (entries.hasNext()) {
 			Map.Entry<String, AppMessage> entry = entries.next();
 			AppMessage appMessage = entry.getValue();
 			long cost = System.currentTimeMillis() - appMessage.getTimeSign();
 			if (cost > 50000){
-				System.out.println(entry.getValue());
+				System.out.println(time + "----" + entry.getValue());
 			}
 		}
-		System.out.println("-----------------end------------------------");
-		System.out.println("-------------------------------------------");
 	}
 }

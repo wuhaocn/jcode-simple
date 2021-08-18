@@ -19,7 +19,7 @@ public class AccessActor extends UntypedActorWithStash {
 
 	@Override
 	public void onReceive(Object o) throws Exception {
-		System.out.println("AccessActor:Object " + o);
+		//System.out.println("AccessActor:Object " + o);
 		if (o instanceof AppMessage) {
 			processAppMessage((AppMessage) o);
 		}
@@ -36,6 +36,7 @@ public class AccessActor extends UntypedActorWithStash {
 			appMessageTmp.setAccessNode(serverAddress);
 			appMessageTmp.setMethod("RouteActor");
 			akkaCloudCluster.routeMessage(appMessageTmp, "InnerActor");
+//			AccessDynamicActor.processAppMessage(akkaCloudCluster, appMessageTmp);
 			ActorReturnCheck.putSign(appMessageTmp.getUuid(), appMessageTmp);
 		}
 		getSender().tell(appMessage, getSelf());

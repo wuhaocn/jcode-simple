@@ -46,12 +46,12 @@ public class AkkaServerConfig {
 
 	public static List<String> getServerList() {
 		List asList = Arrays.asList(
-				"127.0.0.1:2001",
-				"127.0.0.1:2002",
-				"127.0.0.1:2003",
-				"127.0.0.1:2004",
-				"127.0.0.1:2005",
-				"127.0.0.1:2006",
+//				"127.0.0.1:2001",
+//				"127.0.0.1:2002",
+//				"127.0.0.1:2003",
+//				"127.0.0.1:2004",
+//				"127.0.0.1:2005",
+//				"127.0.0.1:2006",
 //				"127.0.0.1:2007",
 //				"127.0.0.1:2008",
 //				"127.0.0.1:2009",
@@ -175,8 +175,8 @@ public class AkkaServerConfig {
 	public static List<String> getAllServerList() {
 		List asList = new ArrayList();
 		asList.addAll(getServerList());
-		asList.addAll(getServer2List());
-		asList.addAll(getServer3List());
+//		asList.addAll(getServer2List());
+//		asList.addAll(getServer3List());
 //		asList.addAll(getServer4List());
 //		asList.addAll(getServer5List());
 		return asList;

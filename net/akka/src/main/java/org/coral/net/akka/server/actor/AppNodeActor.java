@@ -1,6 +1,7 @@
 package org.coral.net.akka.server.actor;
 
 import akka.actor.ActorRef;
+import akka.actor.ActorSelection;
 import akka.actor.UntypedActorWithStash;
 import org.coral.net.akka.api.AppMessage;
 
@@ -20,7 +21,7 @@ public class AppNodeActor extends UntypedActorWithStash {
 
     @Override
     public void onReceive(Object o) throws Exception {
-    	System.out.println("AppNodeActor:onReceive:Object " + o);
+    	//System.out.println("AppNodeActor:onReceive:Object " + o);
 		Random random = new Random();
 		int i = random.nextInt(10);
 		Thread.sleep(i);
@@ -30,6 +31,12 @@ public class AppNodeActor extends UntypedActorWithStash {
 			getSender().tell(o, ActorRef.noSender());
 		}
 
-		System.out.println("AppNodeActor:Return:Object " + o);
+		//System.out.println("AppNodeActor:Return:Object " + o);
     }
+
+	public ActorSelection getNewSender(){
+		ActorRef actorRef = super.getSender();
+		ActorSelection actorSelection = this.context().actorSelection(actorRef.path());
+		return actorSelection;
+	}
 }

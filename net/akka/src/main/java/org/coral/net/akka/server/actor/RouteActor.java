@@ -19,7 +19,7 @@ public class RouteActor extends UntypedActorWithStash {
 
 	@Override
 	public void onReceive(Object o) throws Exception {
-		System.out.println("RouteActor:Object " + o);
+		//System.out.println("RouteActor:Object " + o);
 		if (o instanceof AppMessage) {
 			processAppMessage((AppMessage) o);
 		}
