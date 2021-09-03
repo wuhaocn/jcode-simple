@@ -22,9 +22,9 @@ public class AppNodeActor extends UntypedActorWithStash {
     @Override
     public void onReceive(Object o) throws Exception {
     	//System.out.println("AppNodeActor:onReceive:Object " + o);
-		Random random = new Random();
-		int i = random.nextInt(10);
-		Thread.sleep(i);
+//		Random random = new Random();
+//		int i = random.nextInt(10);
+//		Thread.sleep(i);
 		if (o instanceof AppMessage){
 			AppMessage appMessage = (AppMessage) o;
 			appMessage.setMessage("12345678901234567890");

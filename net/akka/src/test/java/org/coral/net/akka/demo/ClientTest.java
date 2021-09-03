@@ -64,7 +64,7 @@ public class ClientTest {
 
 						}
 
-						Thread.sleep(10000);
+						Thread.sleep(1000);
 						//system.terminate();
 					} catch (Exception e) {
 						e.printStackTrace();

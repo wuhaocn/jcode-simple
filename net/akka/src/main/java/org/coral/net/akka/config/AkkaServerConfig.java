@@ -22,7 +22,7 @@ public class AkkaServerConfig {
 //				"127.0.0.1:10009",
 //				"127.0.0.1:10010",
 //				"127.0.0.1:10011",
-				"127.0.0.1:10012"
+				"10.3.4.111:10012"
 		);
 		return asList;
 	}
@@ -39,7 +39,7 @@ public class AkkaServerConfig {
 //				"127.0.0.1:10009",
 //				"127.0.0.1:10010",
 //				"127.0.0.1:10011",
-				"127.0.0.1:30012"
+				"10.3.4.111:30012"
 		);
 		return asList;
 	}
@@ -64,7 +64,7 @@ public class AkkaServerConfig {
 //				"127.0.0.1:2016",
 //				"127.0.0.1:2017",
 //				"127.0.0.1:2018",
-				"127.0.0.1:2019"
+				"10.3.1.66:2019"
 		);
 		return asList;
 	}
@@ -169,7 +169,7 @@ public class AkkaServerConfig {
 	 * @return
 	 */
 	public static int getToAppNodeCount() {
-		return 2;
+		return 10000;
 	}
 
 	public static List<String> getAllServerList() {

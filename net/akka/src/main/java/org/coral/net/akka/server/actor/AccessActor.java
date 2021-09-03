@@ -19,7 +19,7 @@ public class AccessActor extends UntypedActorWithStash {
 
 	@Override
 	public void onReceive(Object o) throws Exception {
-		//System.out.println("AccessActor:Object " + o);
+		System.out.println("AccessActor:Object " + o);
 		if (o instanceof AppMessage) {
 			processAppMessage((AppMessage) o);
 		}

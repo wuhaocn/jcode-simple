@@ -1,0 +1,10 @@
+dependencies {
+  //log4j
+
+// https://mvnrepository.com/artifact/com.chinamobile.cmos/sms-core
+  implementation group: 'com.chinamobile.cmos', name: 'sms-core', version: '2.1.9'
+
+
+  testCompile group: 'org.slf4j', name: 'slf4j-simple', version: slf4j_version
+}
+

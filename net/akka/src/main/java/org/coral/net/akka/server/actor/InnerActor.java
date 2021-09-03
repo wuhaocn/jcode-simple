@@ -15,7 +15,7 @@ public class InnerActor extends UntypedActorWithStash {
 
 	@Override
 	public void onReceive(Object o) throws Exception {
-		//System.out.println("InnerActor:Object " + o);
+		System.out.println("InnerActor:Object " + o);
 		if (o instanceof AppMessage) {
 			processAppMessage((AppMessage) o);
 		}
