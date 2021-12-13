@@ -11,3 +11,5 @@ include 'cache:caffeine'
 //include 'code-gen:asm'
 
 include 'data:filecounter'
+include 'sec:log4j'
+include 'sec:jnditool'
