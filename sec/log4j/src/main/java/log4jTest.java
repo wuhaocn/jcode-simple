@@ -6,6 +6,7 @@ public class log4jTest {
     private static final Logger logger = LogManager.getLogger(log4jTest.class);
     public static void main(String[] args) {
     	try {
+    		// -Dlog4j2.formatMsgNoLookups=true jvm参数修复
 			// 避免因为Java版本过高而无法触发此漏洞
 			System.setProperty("com.sun.jndi.rmi.object.trustURLCodebase","true");
 			System.setProperty("com.sun.jndi.ldap.object.trustURLCodebase","true");
