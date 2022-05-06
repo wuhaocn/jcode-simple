@@ -11,7 +11,7 @@
         <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="ACCEPT"/>
       </Filters>
       <Policies>
-        <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+        <TimeBasedTriggeringPolicy modulate="true" interval="10"/>
       </Policies>
       <DefaultRolloverStrategy>
         <Delete basePath="sec/log4j/log/${server.name}" maxDepth="1">
