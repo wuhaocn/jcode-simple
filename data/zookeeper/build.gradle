@@ -1,0 +1,6 @@
+dependencies {
+  implementation 'org.apache.curator:curator-framework:5.3.0'
+//
+//  implementation 'org.apache.zookeeper:zookeeper:3.6.3'
+  testImplementation 'junit:junit:4.12'
+}
