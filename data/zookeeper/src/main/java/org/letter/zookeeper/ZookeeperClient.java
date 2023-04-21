@@ -18,25 +18,25 @@ public class ZookeeperClient {
 	private static String clusterPath = "/quarantinecluster/";
 	private static String clusterNamePre = "qutest";
 	private static String data = "1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25";
-	private static String url = "10.41.0.185:2182";
+	private static String url = "10.41.0.185:2181";
 	private static int time = 1000;
 
 	public static void main(String[] args) throws Exception {
 		ZookeeperClient zookeeperClient = new ZookeeperClient();
 		Thread threadAdd = new Thread(() -> {
 			for (int i = 0; i < 10000000; i++) {
-				zookeeperClient.addPath(30, 30);
+				zookeeperClient.addPath(80, 30);
 
 			}
 		});
 		Thread threadDel = new Thread(() -> {
 			for (int i = 0; i < 10000000; i++) {
-				zookeeperClient.delPath(30, 30);
+				zookeeperClient.delPath(30, 1000);
 
 			}
 		});
-		threadAdd.start();
-//		threadDel.start();
+		//threadAdd.start();
+		threadDel.start();
 		
 	}
 
@@ -50,7 +50,7 @@ public class ZookeeperClient {
 			for (int i = 0; i < clusterNames.size(); i++) {
 				String parPath = clusterPath + clusterNames.get(i);
 				try {
-					Thread.sleep(100);
+					Thread.sleep(time);
 					curatorFramework.create().withMode(CreateMode.PERSISTENT).forPath(parPath, data.getBytes());
 				} catch (Exception e) {
 
@@ -59,7 +59,7 @@ public class ZookeeperClient {
 				List<Long> clusterApps = getTestClusterApp(i, appSize);
 				for (Long app : clusterApps) {
 					try {
-						Thread.sleep(100);
+						Thread.sleep(time);
 						curatorFramework.create().withMode(CreateMode.PERSISTENT).forPath(parPath + "/" + app);
 					} catch (Exception e) {
 
@@ -86,7 +86,7 @@ public class ZookeeperClient {
 				List<Long> clusterApps = getTestClusterApp(i, appSize);
 				for (Long app : clusterApps) {
 					try {
-						Thread.sleep(500);
+						//Thread.sleep(time);
 						curatorFramework.delete().forPath(parPath + "/" + app);
 					} catch (Exception e) {
 						e.printStackTrace();
