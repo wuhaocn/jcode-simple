@@ -1,5 +1,5 @@
 dependencies {
-  compile group: 'io.netty', name: 'netty-all', version: '4.1.67.Final'
+  compile group: 'io.netty', name: 'netty-all', version: netty_version
   testCompile group: 'org.slf4j', name: 'slf4j-simple', version: slf4j_version
 }
 
